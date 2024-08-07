@@ -166,12 +166,14 @@ class FederatedMonitor(Monitor):
         #
         # print('Experiment id={} {}, raising alert on channel "{}"'.format(task.id, task.status, self.channel))
 
-        console_output = task.get_reported_console_output(number_of_reports=3)
-        print(console_output)
+            console_output = task.get_reported_console_output(number_of_reports=3)
+            print(console_output)
 
-        task.mark_stopped(force=True , status_message="Switch queue to:{} ".format(self.next_queue))
+            task.mark_stopped(force=True , status_message="Switch queue to:{} ".format(self.next_queue))
 
-        Task.enqueue(task.id, queue_name=self.next_queue)
+            task.set_initial_iteration (task.get_last_iteration() + 1 )
+
+            Task.enqueue(task.id, queue_name=self.next_queue)
 
 
         # message = "{}Experiment ID <{}|{}> *{}*\nProject: *{}*  -  Name: *{}*\n" "```\n{}\n```".format(

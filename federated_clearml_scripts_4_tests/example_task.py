@@ -14,7 +14,7 @@ task = Task.init(
 param = {'args_test_arg1': 164}
 task.connect(param)
 
-task.execute_remotely(queue_name="test_federated")
+#task.execute_remotely(queue_name="test_federated")
 
 
 random.seed()
@@ -23,7 +23,7 @@ user_properties = task.get_user_properties()
 
 if "next_scalar" in user_properties:
 
-    i = int ( user_properties["next_scalar"])
+    i = int ( user_properties["next_scalar"]["value"])
 else :
     i = 0
 
