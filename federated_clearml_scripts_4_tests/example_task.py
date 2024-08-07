@@ -1,4 +1,5 @@
 """This is a dummy ClearML task. This should be replaced by your own experiment code."""
+import pprint
 import random
 import time
 
@@ -20,12 +21,18 @@ task.execute_remotely(queue_name="test_federated")
 random.seed()
 
 user_properties = task.get_user_properties()
+print ("user_properties:")
+pprint.pprint(user_properties)
 
 if "next_scalar" in user_properties:
 
     i = int ( user_properties["next_scalar"]["value"])
+    print (" - 1 - ")
 else :
     i = 0
+    print(" - 2 - ")
+
+print ( i )
 
 for i in tqdm(range(i , 10000)):
     task.get_logger().report_scalar(
