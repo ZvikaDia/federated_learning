@@ -19,7 +19,15 @@ task.execute_remotely(queue_name="test_federated")
 
 random.seed()
 
-for i in tqdm(range(10000)):
+user_properties = task.get_user_properties()
+
+if "next_scalar" in user_properties:
+
+    i = int ( user_properties["next_scalar"])
+else :
+    i = 0
+
+for i in tqdm(range(i , 10000)):
     task.get_logger().report_scalar(
         title="Performance Metric",
         series="Series 1",
@@ -27,3 +35,4 @@ for i in tqdm(range(10000)):
         value=random.randint(0, 100)
     )
     time.sleep(2)
+    task.set_user_properties({"name": "next_scalar", "description": "network type", "value": i },  stable=True)

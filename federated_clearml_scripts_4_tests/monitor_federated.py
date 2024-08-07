@@ -88,7 +88,7 @@ class FederatedMonitor(Monitor):
         super(FederatedMonitor, self).__init__()
 
         self.switch_next_iteration = 20
-        self.next_queue == "test_federated"
+        self.next_queue = "test_federated"
 
     def get_query_parameters(self):
         # type: () -> dict
@@ -147,7 +147,7 @@ class FederatedMonitor(Monitor):
         """
         # skipping failed tasks with low number of iterations
         if task.get_last_iteration() > self.switch_next_iteration:
-            self.switch_next_iteration = self.switch_next_iteration + 20
+            self.switch_next_iteration = task.get_last_iteration() + 20
             if self.next_queue == "test_federated":
                 self.next_queue = "test_federated_2"
             else:
@@ -169,7 +169,7 @@ class FederatedMonitor(Monitor):
         console_output = task.get_reported_console_output(number_of_reports=3)
         print(console_output)
 
-        task.set_status(abort)
+        task.mark_stopped(force=True , status_message="Switch queue to:{} ".format(self.next_queue))
 
         Task.enqueue(task.id, queue_name=self.next_queue)
 
