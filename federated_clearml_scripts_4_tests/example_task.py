@@ -99,7 +99,8 @@ for i in (range(i , 10000)):
     time.sleep(1)
     user_properties = task.get_user_properties()
 
-    if  user_properties["next_scalar"]["value"] == "switching_task":
+    if  user_properties["execution_semaphore"]["value"] == "switching_task":
+        print ("Switching task")
         add_timestamp_to_file (wights_file)
         task.set_user_properties({"name": "next_scalar", "description": "network type", "value": i},
                                  {"name": "execution_semaphore", "description": "execution_semaphore",

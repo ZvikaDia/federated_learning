@@ -187,9 +187,9 @@ class FederatedMonitor(Monitor):
 
                 Task.enqueue(task.id, queue_name=self.next_queue)
             else:
-                user_properties["execution_semaphore"]["value"] == f"switching_task"
+                user_properties["execution_semaphore"]["value"] = f"switching_task"
 
-                task.set_user_properties (user_properties )
+                task.set_user_properties (*list ( user_properties.values()) )
 
         # message = "{}Experiment ID <{}|{}> *{}*\nProject: *{}*  -  Name: *{}*\n" "```\n{}\n```".format(
         #     self._message_prefix,
