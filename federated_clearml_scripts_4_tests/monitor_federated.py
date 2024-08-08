@@ -149,7 +149,6 @@ class FederatedMonitor(Monitor):
         # skipping failed tasks with low number of iterations
 
         if task.get_last_iteration() > self.switch_next_iteration:
-            #self.switch_next_iteration = task.get_last_iteration() + 20
 
             user_properties = task.get_user_properties()
             print("user_properties:")
@@ -157,12 +156,14 @@ class FederatedMonitor(Monitor):
 
             if user_properties["execution_semaphore"]["value"] == "switching_task_preparation_done":
 
+                self.switch_next_iteration = task.get_last_iteration() + 40
+
                 if self.next_queue == "test_federated":
                     self.next_queue = "test_federated_2"
                 else:
                     self.next_queue = "test_federated"
 
-                user_properties["execution_semaphore"]["value"] == f"requeue to {self.next_queue}"
+                user_properties["execution_semaphore"]["value"] = f"requeue to {self.next_queue}"
 
                 task.set_user_properties (*list ( user_properties.values()) )
                 #     print(

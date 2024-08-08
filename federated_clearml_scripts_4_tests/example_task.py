@@ -26,15 +26,18 @@ def add_timestamp_to_file(file_path  ):
     if file_path is not None: 
         with open(file_path, 'r') as f:
           content = f.read()
+
     else:
         content = "starting"
-        
+
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_content = f"{content}\n{current_time}"
 
-    with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(mode='w', delete=False , posix = ".txt") as temp_file:
       temp_file.write(new_content)
+
+    print (new_content)
 
     task.upload_artifact('wights_file',temp_file.name)
 
@@ -81,10 +84,14 @@ else :
 wights_file = None
 
 class Load_model:
+    global wights_file
     if "wights_file" in task.artifacts:
+        print ("Loading weight file")
         wights_file = task.artifacts['wights_file'].get_local_copy()
+        print ("wights_file: {}".format(wights_file))
     else:
         wights_file = None
+        print ("No weight file")
 
 Load_model ()
 
