@@ -164,7 +164,7 @@ class FederatedMonitor(Monitor):
 
                 user_properties["execution_semaphore"]["value"] == f"requeue to {self.next_queue}"
 
-                task.set_user_properties (user_properties )
+                task.set_user_properties (*list ( user_properties.values()) )
                 #     print(
                 #         "Skipping {} experiment id={}, number of iterations {} < {}".format(
                 #             task.status, task.id, task.get_last_iteration(), self.min_num_iterations

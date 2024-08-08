@@ -36,7 +36,7 @@ def add_timestamp_to_file(file_path  ):
     with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp_file:
       temp_file.write(new_content)
 
-    task.upload_artifact('wights_file',temp_file)
+    task.upload_artifact('wights_file',temp_file.name)
 
     return temp_file.name
 
