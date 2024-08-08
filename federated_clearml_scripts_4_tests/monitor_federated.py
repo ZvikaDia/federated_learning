@@ -26,6 +26,7 @@ We are done!
 
 import argparse
 import os
+import pprint
 from pathlib import Path
 from time import sleep
 from typing import Optional, Callable, List, Union
@@ -146,35 +147,49 @@ class FederatedMonitor(Monitor):
         :return: None
         """
         # skipping failed tasks with low number of iterations
+
         if task.get_last_iteration() > self.switch_next_iteration:
-            self.switch_next_iteration = task.get_last_iteration() + 20
-            if self.next_queue == "test_federated":
-                self.next_queue = "test_federated_2"
+            #self.switch_next_iteration = task.get_last_iteration() + 20
+
+            user_properties = task.get_user_properties()
+            print("user_properties:")
+            pprint.pprint(user_properties)
+
+            if user_properties["execution_semaphore"]["value"] == "switching_task_preparation_done":
+
+                if self.next_queue == "test_federated":
+                    self.next_queue = "test_federated_2"
+                else:
+                    self.next_queue = "test_federated"
+
+                user_properties["execution_semaphore"]["value"] == f"requeue to {self.next_queue}"
+
+                task.set_user_properties (user_properties )
+                #     print(
+                #         "Skipping {} experiment id={}, number of iterations {} < {}".format(
+                #             task.status, task.id, task.get_last_iteration(), self.min_num_iterations
+                #         )
+                #     )
+                #     return
+                # if any(f(task) for f in self.filters):
+                #     if self.verbose:
+                #         print("Experiment id={} {} did not pass all filters".format(task.id, task.status))
+                #     return
+                #
+                # print('Experiment id={} {}, raising alert on channel "{}"'.format(task.id, task.status, self.channel))
+
+                console_output = task.get_reported_console_output(number_of_reports=3)
+                print(console_output)
+
+                task.mark_stopped(force=True , status_message="Switch queue to:{} ".format(self.next_queue))
+
+                task.set_initial_iteration (task.get_last_iteration() + 1 )
+
+                Task.enqueue(task.id, queue_name=self.next_queue)
             else:
-                self.next_queue = "test_federated"
+                user_properties["execution_semaphore"]["value"] == f"switching_task"
 
-        #     print(
-        #         "Skipping {} experiment id={}, number of iterations {} < {}".format(
-        #             task.status, task.id, task.get_last_iteration(), self.min_num_iterations
-        #         )
-        #     )
-        #     return
-        # if any(f(task) for f in self.filters):
-        #     if self.verbose:
-        #         print("Experiment id={} {} did not pass all filters".format(task.id, task.status))
-        #     return
-        #
-        # print('Experiment id={} {}, raising alert on channel "{}"'.format(task.id, task.status, self.channel))
-
-            console_output = task.get_reported_console_output(number_of_reports=3)
-            print(console_output)
-
-            task.mark_stopped(force=True , status_message="Switch queue to:{} ".format(self.next_queue))
-
-            task.set_initial_iteration (task.get_last_iteration() + 1 )
-
-            Task.enqueue(task.id, queue_name=self.next_queue)
-
+                task.set_user_properties (user_properties )
 
         # message = "{}Experiment ID <{}|{}> *{}*\nProject: *{}*  -  Name: *{}*\n" "```\n{}\n```".format(
         #     self._message_prefix,
