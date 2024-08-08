@@ -34,7 +34,7 @@ def add_timestamp_to_file(file_path  ):
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_content = f"{content}\n{current_time}"
 
-    with tempfile.NamedTemporaryFile(mode='w', delete=False , posix = ".txt") as temp_file:
+    with tempfile.NamedTemporaryFile(mode='w', delete=False ) as temp_file:
       temp_file.write(new_content)
 
     print (new_content)
